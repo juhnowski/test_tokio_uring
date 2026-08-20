@@ -1,28 +1,26 @@
-# /home/ilya/test-uring/flake.nix
+# /home/ilya/test_tokio_uring/flake.nix
 {
   description = "Среда разработки для тестирования tokio-uring на NixOS";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    utils.url = "github:numtide/utils";
+    # Исправлено: правильный репозиторий называется flake-utils
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, utils }:
-    utils.lib.eachDefaultSystem (system:
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
       in
       {
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
-            # Инструменты Rust
             cargo
             rustc
             rust-analyzer
             clippy
             rustfmt
-
-            # Системные зависимости для сборки
             pkg-config
             libiconv
           ];
